@@ -107,24 +107,15 @@ async function run() {
     }
     // Set  Product Under specific Brand
     app.post("/addProduct", async (req, res) => {
-      try {
-        const { name, brandName, price, rating, image, description, type } =
-          req.body;
-        const database = client.db(brandName.toLowerCase());
-        const productColelction = database.collection("products");
-        const product = {
-          name,
-          brandName,
-          price,
-          rating,
-          image,
-          description,
-          type,
-        };
-        await productColelction.insertOne(product);
-      } catch (error) {
-        res.status(500).send("Error adding product.");
-      }
+      const product = req.body;
+      const { brandName, price, rating, image, description, type } = product;
+
+      const database = client.db(brandName.toLowerCase());
+      const productColelction = database.collection("products");
+
+      const result = await productColelction.insertOne(product);
+      res.send(result);
+      console.log(result);
     });
     // Get Tesla Products from Database
     app.get("/tesla/products", async (req, res) => {
