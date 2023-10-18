@@ -41,9 +41,9 @@ async function run() {
     }
 
     // Get Ford Advertisement Database
-    const fordDb = client.db('ford');
-    const fordAdCollections = fordDb.collection('advertisement');
-    const fordCount = await fordAdCollections.countDocuments(); 
+    const fordDb = client.db("ford");
+    const fordAdCollections = fordDb.collection("advertisement");
+    const fordCount = await fordAdCollections.countDocuments();
     if (fordCount === 0) {
       const fordAd = [
         { image: "https://i.postimg.cc/52LT56D7/1.webp" },
@@ -56,7 +56,7 @@ async function run() {
     // Get bmw Advertisement Database
     const bmwDb = client.db("bmw");
     const bmwAdCollections = bmwDb.collection("advertisement");
-    const bmwCount = await bmwAdCollections.countDocuments(); 
+    const bmwCount = await bmwAdCollections.countDocuments();
     if (bmwCount === 0) {
       const bmwAd = [
         { image: "https://i.postimg.cc/WzckQp24/1.jpg" },
@@ -69,7 +69,7 @@ async function run() {
     // Get mercedes Advertisement Database
     const mercedesDb = client.db("mercedes");
     const mercedesAdCollections = mercedesDb.collection("advertisement");
-    const mercedesCount = await mercedesAdCollections.countDocuments(); 
+    const mercedesCount = await mercedesAdCollections.countDocuments();
     if (mercedesCount === 0) {
       const mercedesAd = [
         { image: "https://i.postimg.cc/760FxXyN/1.jpg" },
@@ -82,7 +82,7 @@ async function run() {
     // Get tesla Advertisement Database
     const teslaDb = client.db("tesla");
     const teslaAdCollections = teslaDb.collection("advertisement");
-    const teslaCount = await teslaAdCollections.countDocuments(); 
+    const teslaCount = await teslaAdCollections.countDocuments();
     if (teslaCount === 0) {
       const teslaAd = [
         { image: "https://i.postimg.cc/0NX9FV0X/1.jpg" },
@@ -95,7 +95,7 @@ async function run() {
     // Get tesla Advertisement Database
     const hondaDb = client.db("honda");
     const hondaAdCollections = hondaDb.collection("advertisement");
-    const hondaCount = await hondaAdCollections.countDocuments(); 
+    const hondaCount = await hondaAdCollections.countDocuments();
     if (hondaCount === 0) {
       const hondaAd = [
         { image: "https://i.postimg.cc/s25gpLSB/1.jpg" },
@@ -147,45 +147,76 @@ async function run() {
     });
 
     // Get Tesla Products from Database
-    app.get('/mercedes/products', async(req, res) => {
+    app.get("/mercedes/products", async (req, res) => {
       const brandName = "Mercedes";
       const brandDb = client.db(brandName.toLowerCase());
-      const productCollections = brandDb.collection('products');
-      const cursor = productCollections.find({})
-      const result = await cursor.toArray();
-      res.send(result);
-    })
-// Get Ford product From database
-    app.get('/ford/products' , async(req,res) => {
-      const brandName = 'Ford';
-      const brandDb = client.db(brandName.toLowerCase());
-      const productCollections = brandDb.collection('products');
+      const productCollections = brandDb.collection("products");
       const cursor = productCollections.find({});
       const result = await cursor.toArray();
       res.send(result);
-    })
-// Get bmw product From database
-    app.get('/bmw/products' , async(req,res) => {
-      const brandName = 'BMW';
+    });
+    // Get Ford product From database
+    app.get("/ford/products", async (req, res) => {
+      const brandName = "Ford";
       const brandDb = client.db(brandName.toLowerCase());
-      const productCollections = brandDb.collection('products');
+      const productCollections = brandDb.collection("products");
       const cursor = productCollections.find({});
       const result = await cursor.toArray();
       res.send(result);
-    })
-// Get bmw product From database
-    app.get('/honda/products' , async(req,res) => {
-      const brandName = 'Honda';
+    });
+    // Get bmw product From database
+    app.get("/bmw/products", async (req, res) => {
+      const brandName = "BMW";
       const brandDb = client.db(brandName.toLowerCase());
-      const productCollections = brandDb.collection('products');
+      const productCollections = brandDb.collection("products");
       const cursor = productCollections.find({});
       const result = await cursor.toArray();
       res.send(result);
-    })
+    });
+    // Get bmw product From database
+    app.get("/honda/products", async (req, res) => {
+      const brandName = "Honda";
+      const brandDb = client.db(brandName.toLowerCase());
+      const productCollections = brandDb.collection("products");
+      const cursor = productCollections.find({});
+      const result = await cursor.toArray();
+      res.send(result);
+    });
 
     // Get Toyota Advertisement
     app.get("/toyota/advertisement", async (req, res) => {
       const cursor = toyotaAdCollections.find({});
+      const result = await cursor.toArray();
+      res.send(result);
+    });
+
+    // Get Ford Advertisement
+    app.get("/ford/advertisement", async (req, res) => {
+      const cursor = fordAdCollections.find({});
+      const result = await cursor.toArray();
+      res.send(result);
+    });
+    // Get bmw Advertisement
+    app.get("/bmw/advertisement", async (req, res) => {
+      const cursor = bmwAdCollections.find({});
+      const result = await cursor.toArray();
+      res.send(result);
+    });
+    // Get mercedes Advertisement
+    app.get("/mercedes/advertisement", async (req, res) => {
+      const cursor = mercedesAdCollections.find({});
+      const result = await cursor.toArray();
+      res.send(result);
+    });
+    // Get tesla Advertisement
+    app.get("/tesla/advertisement", async (req, res) => {
+      const cursor = teslaAdCollections.find({});
+      const result = await cursor.toArray();
+      res.send(result);
+    });
+    // Get honda Advertisement
+    app.get("/honda/advertisement", async (req, res) => {
+      const cursor = hondaAdCollections.find({});
       const result = await cursor.toArray();
       res.send(result);
     });
