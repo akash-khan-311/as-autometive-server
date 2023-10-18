@@ -3,7 +3,7 @@ const app = express();
 const cors = require("cors");
 const port = process.env.PORT || 3000;
 require("dotenv").config();
-const { MongoClient, ServerApiVersion } = require("mongodb");
+const { MongoClient, ServerApiVersion, ObjectId } = require("mongodb");
 
 // Middleware
 app.use(express.json());
@@ -28,7 +28,9 @@ async function run() {
     // toyota advertisement Database
     const toyotaDb = client.db("toyota");
     const toyotaAdCollections = toyotaDb.collection("advertisement");
-
+    app.listen(port, () => {
+      console.log("listening on port", port);
+    });
     const count = await toyotaAdCollections.countDocuments();
     if (count === 0) {
       const toyotaAd = [
@@ -211,6 +213,48 @@ async function run() {
       const result = await cursor.toArray();
       res.send(result);
     });
+    // Get all Data From Database
+
+    app.get("/details/:id", async (req, res) => {
+      const databaseNames = [
+        "tesla",
+        "toyota",
+        "honda",
+        "mercedes",
+        "bmw",
+        "ford",
+      ];
+; // Replace with your database names
+
+   const id = req.params.id; // Get the _id from the URL parameter
+
+   const objectId = new ObjectId(id);
+
+   for (const dbName of databaseNames) {
+     const db = client.db(dbName);
+
+     const collectionNames = [
+       "products",
+       "products",
+       "products",
+       "products",
+       "products",
+       "products",
+     ]; // Replace with your collection names
+
+     for (const collectionName of collectionNames) {
+       const collection = db.collection(collectionName);
+
+       const data = await collection.find({ _id: objectId }).toArray();
+
+       if (data.length > 0) {
+        res.send(data);
+         return; // Stop looping if data is found in one of the collections
+       }
+     }
+   }
+
+    });
 
     app.get("/", (req, res) => {
       res.send("Server Is Running");
@@ -221,12 +265,9 @@ async function run() {
     console.log(
       "Pinged your deployment. You successfully connected to MongoDB!"
     );
-  } catch (error) {
-    console.log("Error connecting to MongoDB", error);
+  } finally {
+    // Ensures that the client will close when you finish/error
+    // await client.close();
   }
 }
 run().catch(console.dir);
-
-app.listen(port, () => {
-  console.log("listening on port", port);
-});
