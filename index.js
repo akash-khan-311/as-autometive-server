@@ -20,10 +20,48 @@ const client = new MongoClient(uri, {
   },
 });
 
+const toyotaOffers = [
+  {
+    image:
+      "https://di-uploads-pod13.dealerinspire.com/fletcherjonestoyotaofcarson/uploads/2023/10/Toyota-Tire-Offer-October-Desktop.png",
+  },
+
+  {
+    image:
+      "https://toyota.com.bd/media/images/8X4-Feet-Spare-Partanner-4-times_Copy.width-1920.jpgs-B",
+  },
+];
+
 async function run() {
   try {
     // Connect the client to the server	(optional starting in v4.7)
     await client.connect();
+
+    const database = client.db("OfferDB");
+    const toyotaCollection = database.collection("tyota");
+    const bmwCollection = database.collection("bmw");
+
+    app.get("/", (req, res) => {
+      res.send("Server Is Running");
+    });
+
+    app.post("/toyota", async (req, res) => {
+      const result = await toyotaCollection.insertOne(toyotaOffers);
+      res.send(result);
+    });
+
+    app.get("/bmw", async (req, res) => {
+      const cursor = bmwCollection.find({})
+      const bmwOffers  = await cursor.toArray();
+      res.send(bmwOffers);
+    });
+
+    app.get("/toyota", async (req, res) => {
+      const cursor = toyotaCollection.find({});
+      const toyotaOffers = await cursor.toArray();
+      res.send(toyotaOffers);
+    });
+
     // Send a ping to confirm a successful connection
     await client.db("admin").command({ ping: 1 });
     console.log(
