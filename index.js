@@ -25,47 +25,173 @@ async function run() {
     // Connect the client to the server	(optional starting in v4.7)
     await client.connect();
 
-    const database = client.db("OfferDB");
-    const toyotaCollection = database.collection("toyota");
-    const bmwCollection = database.collection("bmw");
-    const fordCollection = database.collection("ford");
-    const teslaCollection = database.collection("tesla");
-    const hondaCollection = database.collection("honda");
-    const marcedezCollection = database.collection("marcedez");
+    // toyota advertisement Database
+    const toyotaDb = client.db("toyota");
+    const toyotaAdCollections = toyotaDb.collection("advertisement");
+
+    const count = await toyotaAdCollections.countDocuments();
+    if (count === 0) {
+      const toyotaAd = [
+        { image: "https://i.postimg.cc/43pYRTmL/1.webp" },
+        { image: "https://i.postimg.cc/63wy91Z9/2.jpg" },
+        { image: "https://i.postimg.cc/Jnqttc3j/3.jpg" },
+      ];
+      const options = { ordered: false };
+      await toyotaAdCollections.insertMany(toyotaAd, options);
+    }
+
+    // Get Ford Advertisement Database
+    const fordDb = client.db('ford');
+    const fordAdCollections = fordDb.collection('advertisement');
+    const fordCount = await fordAdCollections.countDocuments(); 
+    if (fordCount === 0) {
+      const fordAd = [
+        { image: "https://i.postimg.cc/52LT56D7/1.webp" },
+        { image: "https://i.postimg.cc/9Xknvdhg/2.webp" },
+        { image: "https://i.postimg.cc/HxsNC3nR/3.jpg" },
+      ];
+      const options = { ordered: false };
+      await fordAdCollections.insertMany(fordAd, options);
+    }
+    // Get bmw Advertisement Database
+    const bmwDb = client.db("bmw");
+    const bmwAdCollections = bmwDb.collection("advertisement");
+    const bmwCount = await bmwAdCollections.countDocuments(); 
+    if (bmwCount === 0) {
+      const bmwAd = [
+        { image: "https://i.postimg.cc/WzckQp24/1.jpg" },
+        { image: "https://i.postimg.cc/d3RyvM1j/2.webp" },
+        { image: "https://i.postimg.cc/5N1zgt77/bmw.png" },
+      ];
+      const options = { ordered: false };
+      await bmwAdCollections.insertMany(bmwAd, options);
+    }
+    // Get mercedes Advertisement Database
+    const mercedesDb = client.db("mercedes");
+    const mercedesAdCollections = mercedesDb.collection("advertisement");
+    const mercedesCount = await mercedesAdCollections.countDocuments(); 
+    if (mercedesCount === 0) {
+      const mercedesAd = [
+        { image: "https://i.postimg.cc/760FxXyN/1.jpg" },
+        { image: "https://i.postimg.cc/L5Srhf9F/2.jpg" },
+        { image: "https://i.postimg.cc/W4BRLCx3/3.jpg" },
+      ];
+      const options = { ordered: false };
+      await mercedesAdCollections.insertMany(mercedesAd, options);
+    }
+    // Get tesla Advertisement Database
+    const teslaDb = client.db("tesla");
+    const teslaAdCollections = teslaDb.collection("advertisement");
+    const teslaCount = await teslaAdCollections.countDocuments(); 
+    if (teslaCount === 0) {
+      const teslaAd = [
+        { image: "https://i.postimg.cc/0NX9FV0X/1.jpg" },
+        { image: "https://i.postimg.cc/bwTyHyDh/2.webp" },
+        { image: "https://i.postimg.cc/5t2xshLF/3.webp" },
+      ];
+      const options = { ordered: false };
+      await teslaAdCollections.insertMany(teslaAd, options);
+    }
+    // Get tesla Advertisement Database
+    const hondaDb = client.db("honda");
+    const hondaAdCollections = hondaDb.collection("advertisement");
+    const hondaCount = await hondaAdCollections.countDocuments(); 
+    if (hondaCount === 0) {
+      const hondaAd = [
+        { image: "https://i.postimg.cc/s25gpLSB/1.jpg" },
+        { image: "https://i.postimg.cc/fRtLbyRf/2.jpg" },
+        { image: "https://i.postimg.cc/W1B4qVDL/3.jpg" },
+      ];
+      const options = { ordered: false };
+      await hondaAdCollections.insertMany(hondaAd, options);
+    }
+    // Set  Product Under specific Brand
+    app.post("/addProduct", async (req, res) => {
+      try {
+        const { name, brandName, price, rating, image, description, type } =
+          req.body;
+        const database = client.db(brandName.toLowerCase());
+        const productColelction = database.collection("products");
+        const product = {
+          name,
+          brandName,
+          price,
+          rating,
+          image,
+          description,
+          type,
+        };
+        await productColelction.insertOne(product);
+      } catch (error) {
+        res.status(500).send("Error adding product.");
+      }
+    });
+    // Get Tesla Products from Database
+    app.get("/tesla/products", async (req, res) => {
+      const brandName = "Tesla";
+      const brandDb = client.db(brandName.toLowerCase());
+      const productCollections = brandDb.collection("products");
+      const cursor = productCollections.find({});
+      const result = await cursor.toArray();
+      res.send(result);
+    });
+
+    // Get Toyota Products from database
+    app.get("/toyota/products", async (req, res) => {
+      const brandName = "Toyota";
+      const brandDb = client.db(brandName.toLowerCase());
+      const productCollections = brandDb.collection("products");
+      const cursor = productCollections.find({});
+      const result = await cursor.toArray();
+      res.send(result);
+    });
+
+    // Get Tesla Products from Database
+    app.get('/mercedes/products', async(req, res) => {
+      const brandName = "Mercedes";
+      const brandDb = client.db(brandName.toLowerCase());
+      const productCollections = brandDb.collection('products');
+      const cursor = productCollections.find({})
+      const result = await cursor.toArray();
+      res.send(result);
+    })
+// Get Ford product From database
+    app.get('/ford/products' , async(req,res) => {
+      const brandName = 'Ford';
+      const brandDb = client.db(brandName.toLowerCase());
+      const productCollections = brandDb.collection('products');
+      const cursor = productCollections.find({});
+      const result = await cursor.toArray();
+      res.send(result);
+    })
+// Get bmw product From database
+    app.get('/bmw/products' , async(req,res) => {
+      const brandName = 'BMW';
+      const brandDb = client.db(brandName.toLowerCase());
+      const productCollections = brandDb.collection('products');
+      const cursor = productCollections.find({});
+      const result = await cursor.toArray();
+      res.send(result);
+    })
+// Get bmw product From database
+    app.get('/honda/products' , async(req,res) => {
+      const brandName = 'Honda';
+      const brandDb = client.db(brandName.toLowerCase());
+      const productCollections = brandDb.collection('products');
+      const cursor = productCollections.find({});
+      const result = await cursor.toArray();
+      res.send(result);
+    })
+
+    // Get Toyota Advertisement
+    app.get("/toyota/advertisement", async (req, res) => {
+      const cursor = toyotaAdCollections.find({});
+      const result = await cursor.toArray();
+      res.send(result);
+    });
 
     app.get("/", (req, res) => {
       res.send("Server Is Running");
-    });
-
-    app.get("/toyota", async (req, res) => {
-      const cursor = toyotaCollection.find({});
-      const result = await cursor.toArray();
-      res.send(result);
-    });
-    app.get("bmw", async (req, res) => {
-      const cursor = bmwCollection.find({});
-      const result = await cursor.toArray();
-      res.send(result);
-    });
-    app.get("/ford", async (req, res) => {
-      const cursor = fordCollection.find({});
-      const result = await cursor.toArray();
-      res.send(result);
-    });
-    app.get("/honda", async (req, res) => {
-      const cursor = hondaCollection.find({});
-      const result = await cursor.toArray();
-      res.send(result);
-    });
-    app.get("/marcedez", async (req, res) => {
-      const cursor = marcedezCollection.find({});
-      const result = await cursor.toArray();
-      res.send(result);
-    });
-    app.get("/tesla", async (req, res) => {
-      const cursor = teslaCollection.find({});
-      const result = await cursor.toArray();
-      res.send(result);
     });
 
     // Send a ping to confirm a successful connection
