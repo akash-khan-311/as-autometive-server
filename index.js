@@ -270,9 +270,31 @@ async function run() {
           type: updatedProduct.type,
         },
       };
-      const db =  client.db(updatedProduct.brandName.toLowerCase());
+      const db = client.db(updatedProduct.brandName.toLowerCase());
       const productColelction = db.collection("products");
-      const result = await productColelction.updateOne(filter,product,options);
+      const result = await productColelction.updateOne(
+        filter,
+        product,
+        options
+      );
+      res.send(result);
+    });
+
+    // set product to database - add to cart
+    app.post("/product", async (req, res) => {
+      const addedProduct = req.body;
+      const db = client.db("cartDB");
+      const cartCollection = db.collection("cart");
+      const result = await cartCollection.insertOne(addedProduct);
+      res.send(result);
+      console.log(addedProduct);
+    });
+
+    // Get the All Cart Products
+    app.get("/products", async (req, res) => {
+      const cartCollection = client.db("cartDB").collection("cart");
+      const cursor = cartCollection.find({});
+      const result = await cursor.toArray();
       res.send(result);
     });
 
