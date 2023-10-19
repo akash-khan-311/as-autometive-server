@@ -223,37 +223,57 @@ async function run() {
         "mercedes",
         "bmw",
         "ford",
-      ];
-; // Replace with your database names
+      ]; // Replace with your database names
+      const id = req.params.id; // Get the _id from the URL parameter
 
-   const id = req.params.id; // Get the _id from the URL parameter
+      const objectId = new ObjectId(id);
 
-   const objectId = new ObjectId(id);
+      for (const dbName of databaseNames) {
+        const db = client.db(dbName);
 
-   for (const dbName of databaseNames) {
-     const db = client.db(dbName);
+        const collectionNames = [
+          "products",
+          "products",
+          "products",
+          "products",
+          "products",
+          "products",
+        ]; // Replace with your collection names
 
-     const collectionNames = [
-       "products",
-       "products",
-       "products",
-       "products",
-       "products",
-       "products",
-     ]; // Replace with your collection names
+        for (const collectionName of collectionNames) {
+          const collection = db.collection(collectionName);
 
-     for (const collectionName of collectionNames) {
-       const collection = db.collection(collectionName);
+          const data = await collection.find({ _id: objectId }).toArray();
 
-       const data = await collection.find({ _id: objectId }).toArray();
+          if (data.length > 0) {
+            res.send(data);
+            return; // Stop looping if data is found in one of the collections
+          }
+        }
+      }
+    });
 
-       if (data.length > 0) {
-        res.send(data);
-         return; // Stop looping if data is found in one of the collections
-       }
-     }
-   }
-
+    // Update the Product
+    app.put("/update/:id", async (req, res) => {
+      const id = req.params.id;
+      const filter = { _id: new ObjectId(id) };
+      const options = { upsert: true };
+      const updatedProduct = req.body;
+      const product = {
+        $set: {
+          name: updatedProduct.name,
+          brandName: updatedProduct.brandName,
+          price: updatedProduct.price,
+          rating: updatedProduct.rating,
+          image: updatedProduct.image,
+          description: updatedProduct.description,
+          type: updatedProduct.type,
+        },
+      };
+      const db =  client.db(updatedProduct.brandName.toLowerCase());
+      const productColelction = db.collection("products");
+      const result = await productColelction.updateOne(filter,product,options);
+      res.send(result);
     });
 
     app.get("/", (req, res) => {
