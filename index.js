@@ -23,7 +23,7 @@ const client = new MongoClient(uri, {
 async function run() {
   try {
     // Connect the client to the server	(optional starting in v4.7)
-    await client.connect();
+
 
     // toyota advertisement Database
     const toyotaDb = client.db("toyota");
@@ -287,7 +287,7 @@ async function run() {
       const cartCollection = db.collection("cart");
       const result = await cartCollection.insertOne(addedProduct);
       res.send(result);
-      console.log(addedProduct);
+      
     });
 
     // Get the All Cart Products
