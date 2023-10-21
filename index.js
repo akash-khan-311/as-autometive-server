@@ -1,13 +1,22 @@
 const express = require("express");
 const app = express();
+require("dotenv").config();
 const cors = require("cors");
 const port = process.env.PORT || 4000;
-require("dotenv").config();
 const { MongoClient, ServerApiVersion, ObjectId } = require("mongodb");
 
 // Middleware
 app.use(express.json());
-app.use(cors());
+// app.use(cors());
+
+
+const corsConfig = {
+  origin: "*",
+  credentials: true,
+  methods: ["GET", "POST", "PUT", "PATCH", "DELETE"],
+};
+app.use(cors(corsConfig));
+
 
 const uri = `mongodb+srv://${process.env.DATABASE_USERNAME}:${process.env.DATABASE_PASSWORD}@cluster0.csegahf.mongodb.net/?retryWrites=true&w=majority`;
 
@@ -22,8 +31,7 @@ const client = new MongoClient(uri, {
 
 async function run() {
   try {
-    // Connect the client to the server	(optional starting in v4.7)
-
+    
 
     // toyota advertisement Database
     const toyotaDb = client.db("toyota");
