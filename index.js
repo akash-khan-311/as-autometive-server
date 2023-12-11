@@ -1,9 +1,9 @@
 const express = require("express");
 const app = express();
-require("dotenv").config();
 const cors = require("cors");
-const port = process.env.PORT || 4000;
+require("dotenv").config();
 const { MongoClient, ServerApiVersion, ObjectId } = require("mongodb");
+const port = process.env.PORT || 4000;
 
 // Middleware
 app.use(express.json());
@@ -36,9 +36,7 @@ async function run() {
     // toyota advertisement Database
     const toyotaDb = client.db("toyota");
     const toyotaAdCollections = toyotaDb.collection("advertisement");
-    app.listen(port, () => {
-      console.log("listening on port", port);
-    });
+    
     const count = await toyotaAdCollections.countDocuments();
     if (count === 0) {
       const toyotaAd = [
@@ -313,21 +311,25 @@ async function run() {
       const cartCollection = client.db("cartDB").collection("cart");
       const result = await cartCollection.deleteOne(query);
       res.send(result);
-      console.log(result);
+
     });
 
-    app.get("/", (req, res) => {
-      res.send("Server Is Running");
-    });
 
-    // Send a ping to confirm a successful connection
-    await client.db("admin").command({ ping: 1 });
-    console.log(
-      "Pinged your deployment. You successfully connected to MongoDB!"
-    );
+
+  
   } finally {
     // Ensures that the client will close when you finish/error
     // await client.close();
   }
 }
 run().catch(console.dir);
+
+app.get("/", (req, res) => {
+  res.send("Server Is Running");
+});
+app.listen(port, () => {
+  console.log("listening on port", port);
+});
+
+
+
